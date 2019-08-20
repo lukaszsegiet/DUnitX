@@ -1,13 +1,24 @@
-program DUnitXTest_XE3;
+program DUnitXTest_D10Rio;
 
+{$IFNDEF GUI}
 {$APPTYPE CONSOLE}
+{$ENDIF}
+
 {$STRONGLINKTYPES ON}
+
 uses
-  SysUtils,
+  System.SysUtils,
+  {$IFDEF TESTINSIGHT}
+  TestInsight.DUnitX,
+  {$ENDIF }
+  {$IFDEF MSWINDOWS}
+  DUnitX.Loggers.GUI.VCL in '..\DUnitX.Loggers.GUI.VCL.pas' {GUIVCLTestRunner},
+  DUnitX.Windows.Console in '..\DUnitX.Windows.Console.pas',
+  DUnitX.MemoryLeakMonitor.FastMM4 in '..\DUnitX.MemoryLeakMonitor.FastMM4.pas',
+  {$ENDIF }
   DUnitX.Loggers.Console in '..\DUnitX.Loggers.Console.pas',
   DUnitX.Loggers.Text in '..\DUnitX.Loggers.Text.pas',
   DUnitX.MacOS.Console in '..\DUnitX.MacOS.Console.pas',
-  DUnitX.Windows.Console in '..\DUnitX.Windows.Console.pas',
   DUnitX.ConsoleWriter.Base in '..\DUnitX.ConsoleWriter.Base.pas',
   DUnitX.Loggers.XML.xUnit in '..\DUnitX.Loggers.XML.xUnit.pas',
   DUnitX.Generics in '..\DUnitX.Generics.pas',
@@ -41,7 +52,6 @@ uses
   DUnitX.Loggers.XML.NUnit in '..\DUnitX.Loggers.XML.NUnit.pas',
   DUnitX.SingleNameSpace in 'DUnitX.SingleNameSpace.pas',
   DUnitX.MemoryLeakMonitor.Default in '..\DUnitX.MemoryLeakMonitor.Default.pas',
-  DUnitX.MemoryLeakMonitor.FastMM4 in '..\DUnitX.MemoryLeakMonitor.FastMM4.pas',
   DUnitX.Tests.MemoryLeaks in 'DUnitX.Tests.MemoryLeaks.pas',
   DUnitX.Extensibility in '..\DUnitX.Extensibility.pas',
   DUnitX.Extensibility.PluginManager in '..\DUnitX.Extensibility.PluginManager.pas',
@@ -62,7 +72,10 @@ uses
   DUnitX.Tests.ConsoleWriter.Base in 'DUnitX.Tests.ConsoleWriter.Base.pas',
   DUnitX.Assert in '..\DUnitX.Assert.pas',
   DUnitX.Types in '..\DUnitX.Types.pas',
-  DUnitX.Init in '..\DUnitX.Init.pas';
+  DUnitX.Attributes in '..\DUnitX.Attributes.pas',
+  DUnitX.TestDataProvider in '..\DUnitX.TestDataProvider.pas',
+  DUnitX.Tests.TestDataProvider in 'DUnitX.Tests.TestDataProvider.pas',
+  DUnitX.InternalDataProvider in '..\DUnitX.InternalDataProvider.pas';
 
 var
   runner : ITestRunner;
@@ -70,6 +83,16 @@ var
   logger : ITestLogger;
   nunitLogger : ITestLogger;
 begin
+  {$IFDEF TESTINSIGHT}
+  TestInsight.DUnitX.RunRegisteredTests;
+  Exit;
+  {$ENDIF}
+
+  {$IFDEF GUI}
+    DUnitX.Loggers.GUI.VCL.Run;
+    exit;
+  {$ENDIF}
+
   try
     TDUnitX.CheckCommandLine;
     //Create the runner
@@ -102,7 +125,7 @@ begin
     //We don;t want this happening when running under CI.
     if TDUnitX.Options.ExitBehavior = TDUnitXExitBehavior.Pause then
     begin
-      System.Write('Done.. press <Enter> key to quit.');
+      System.Write('Done...  Press <Enter> key to quit.');
       System.Readln;
     end;
     {$ENDIF}

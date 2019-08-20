@@ -674,7 +674,7 @@ type
     function Tail: PPropInfoExt; inline;
   end;
   {$ENDIF}
- 
+
   TRttiPropertyExtension = class(TRttiInstanceProperty)
   private
     {$IFDEF DELPHI_XE3_UP}
@@ -905,7 +905,7 @@ function ConvStr2DynArray(const ASource: TValue; ATarget: PTypeInfo; out AResult
 var
   s: string;
   values: TStringDynArray;
-  i: Integer;
+  i: NativeInt;
   p: Pointer;
   v1, v2: TValue;
   elType: PTypeInfo;
@@ -1163,7 +1163,7 @@ const
       // tkVariant, tkArray, tkRecord, tkInterface, tkInt64, tkDynArray
       ConvFail, ConvFail, ConvFail, ConvFail, ConvFail, ConvFail,
       // tkUString, tkClassRef, tkPointer, tkProcedure
-      ConvFail, ConvFail, ConvFail, ConvFail
+      ConvFail, ConvFail, ConvFail, ConvFail {$IFDEF DELPHI_XE103_UP}, ConvFail{$ENDIF}
     ),
     // tkInteger
     (
@@ -1173,8 +1173,8 @@ const
       ConvFail, ConvFail, ConvFail, ConvFail, ConvFail, ConvFail,
       // tkVariant, tkArray, tkRecord, tkInterface, tkInt64, tkDynArray
       ConvFail, ConvFail, ConvFail, ConvFail, ConvOrd2Ord, ConvFail,
-      // tkUString, tkClassRef, tkPointer, tkProcedure
-      ConvOrd2Str, ConvFail, ConvFail, ConvFail
+      // tkUString, tkClassRef, tkPointer, tkProcedure, tkMRecord
+      ConvOrd2Str, ConvFail, ConvFail, ConvFail {$IFDEF DELPHI_XE103_UP}, ConvFail{$ENDIF}
     ),
     // tkChar
     (
@@ -1184,8 +1184,8 @@ const
       ConvFail, ConvFail, ConvFail, ConvFail, ConvFail, ConvFail,
       // tkVariant, tkArray, tkRecord, tkInterface, tkInt64, tkDynArray
       ConvFail, ConvFail, ConvFail, ConvFail, ConvOrd2Ord, ConvFail,
-      // tkUString, tkClassRef, tkPointer, tkProcedure
-      ConvFail, ConvFail, ConvFail, ConvFail
+      // tkUString, tkClassRef, tkPointer, tkProcedure, tkMRecord
+      ConvFail, ConvFail, ConvFail, ConvFail {$IFDEF DELPHI_XE103_UP}, ConvFail{$ENDIF}
     ),
     // tkEnumeration
     (
@@ -1195,8 +1195,8 @@ const
       ConvFail, ConvEnum2Class, ConvFail, ConvFail, ConvFail, ConvFail,
       // tkVariant, tkArray, tkRecord, tkInterface, tkInt64, tkDynArray
       ConvFail, ConvFail, ConvFail, ConvFail, ConvOrd2Ord, ConvFail,
-      // tkUString, tkClassRef, tkPointer, tkProcedure
-      ConvOrd2Str, ConvFail, ConvFail, ConvFail
+      // tkUString, tkClassRef, tkPointer, tkProcedure, tkMRecord
+      ConvOrd2Str, ConvFail, ConvFail, ConvFail {$IFDEF DELPHI_XE103_UP}, ConvFail{$ENDIF}
     ),
     // tkFloat
     (
@@ -1206,8 +1206,8 @@ const
       ConvFail, ConvFail, ConvFail, ConvFail, ConvFail, ConvFail,
       // tkVariant, tkArray, tkRecord, tkInterface, tkInt64, tkDynArray
       ConvFail, ConvFail, ConvFail, ConvFail, ConvFloat2Ord, ConvFail,
-      // tkUString, tkClassRef, tkPointer, tkProcedure
-      ConvFloat2Str, ConvFail, ConvFail, ConvFail
+      // tkUString, tkClassRef, tkPointer, tkProcedure, tkMRecord
+      ConvFloat2Str, ConvFail, ConvFail, ConvFail {$IFDEF DELPHI_XE103_UP}, ConvFail{$ENDIF}
     ),
     // tkString
     (
@@ -1217,8 +1217,8 @@ const
       ConvFail, ConvFail, ConvFail, ConvFail, ConvFail, ConvFail,
       // tkVariant, tkArray, tkRecord, tkInterface, tkInt64, tkDynArray
       ConvFail, ConvFail, ConvFail, ConvFail, ConvFail, ConvFail,
-      // tkUString, tkClassRef, tkPointer, tkProcedure
-      ConvFail, ConvFail, ConvFail, ConvFail
+      // tkUString, tkClassRef, tkPointer, tkProcedure, tkMRecord
+      ConvFail, ConvFail, ConvFail, ConvFail {$IFDEF DELPHI_XE103_UP}, ConvFail{$ENDIF}
     ),
     // tkSet
     (
@@ -1228,8 +1228,8 @@ const
       ConvFail, ConvSet2Class, ConvFail, ConvFail, ConvFail, ConvFail,
       // tkVariant, tkArray, tkRecord, tkInterface, tkInt64, tkDynArray
       ConvFail, ConvFail, ConvFail, ConvFail, ConvFail, ConvFail,
-      // tkUString, tkClassRef, tkPointer, tkProcedure
-      ConvFail, ConvFail, ConvFail, ConvFail
+      // tkUString, tkClassRef, tkPointer, tkProcedure, tkMRecord
+      ConvFail, ConvFail, ConvFail, ConvFail {$IFDEF DELPHI_XE103_UP}, ConvFail{$ENDIF}
     ),
     // tkClass
     (
@@ -1239,8 +1239,8 @@ const
       ConvFail, ConvClass2Class, ConvFail, ConvFail, ConvFail, ConvFail,
       // tkVariant, tkArray, tkRecord, tkInterface, tkInt64, tkDynArray
       ConvFail, ConvFail, ConvFail, ConvFail, ConvFail, ConvFail,
-      // tkUString, tkClassRef, tkPointer, tkProcedure
-      ConvFail, ConvFail, ConvFail, ConvFail
+      // tkUString, tkClassRef, tkPointer, tkProcedure, tkMRecord
+      ConvFail, ConvFail, ConvFail, ConvFail {$IFDEF DELPHI_XE103_UP}, ConvFail{$ENDIF}
     ),
     // tkMethod
     (
@@ -1250,8 +1250,8 @@ const
       ConvFail, ConvFail, ConvFail, ConvFail, ConvFail, ConvFail,
       // tkVariant, tkArray, tkRecord, tkInterface, tkInt64, tkDynArray
       ConvFail, ConvFail, ConvFail, ConvFail, ConvFail, ConvFail,
-      // tkUString, tkClassRef, tkPointer, tkProcedure
-      ConvFail, ConvFail, ConvFail, ConvFail
+      // tkUString, tkClassRef, tkPointer, tkProcedure, tkMRecord
+      ConvFail, ConvFail, ConvFail, ConvFail {$IFDEF DELPHI_XE103_UP}, ConvFail{$ENDIF}
     ),
     // tkWChar
     (
@@ -1261,8 +1261,8 @@ const
       ConvFail, ConvFail, ConvFail, ConvFail, ConvFail, ConvFail,
       // tkVariant, tkArray, tkRecord, tkInterface, tkInt64, tkDynArray
       ConvFail, ConvFail, ConvFail, ConvFail, ConvOrd2Ord, ConvFail,
-      // tkUString, tkClassRef, tkPointer, tkProcedure
-      ConvFail, ConvFail, ConvFail, ConvFail
+      // tkUString, tkClassRef, tkPointer, tkProcedure, tkMRecord
+      ConvFail, ConvFail, ConvFail, ConvFail {$IFDEF DELPHI_XE103_UP}, ConvFail{$ENDIF}
     ),
     // tkLString
     (
@@ -1272,8 +1272,8 @@ const
       ConvFail, ConvFail, ConvFail, ConvFail, ConvFail, ConvFail,
       // tkVariant, tkArray, tkRecord, tkInterface, tkInt64, tkDynArray
       ConvFail, ConvFail, ConvFail, ConvFail, ConvFail, ConvFail,
-      // tkUString, tkClassRef, tkPointer, tkProcedure
-      ConvFail, ConvFail, ConvFail, ConvFail
+      // tkUString, tkClassRef, tkPointer, tkProcedure, tkMRecord
+      ConvFail, ConvFail, ConvFail, ConvFail {$IFDEF DELPHI_XE103_UP}, ConvFail{$ENDIF}
     ),
     // tkWString
     (
@@ -1283,8 +1283,8 @@ const
       ConvFail, ConvFail, ConvFail, ConvFail, ConvFail, ConvFail,
       // tkVariant, tkArray, tkRecord, tkInterface, tkInt64, tkDynArray
       ConvFail, ConvFail, ConvFail, ConvFail, ConvFail, ConvFail,
-      // tkUString, tkClassRef, tkPointer, tkProcedure
-      ConvFail, ConvFail, ConvFail, ConvFail
+      // tkUString, tkClassRef, tkPointer, tkProcedure, tkMRecord
+      ConvFail, ConvFail, ConvFail, ConvFail {$IFDEF DELPHI_XE103_UP}, ConvFail{$ENDIF}
     ),
     // tkVariant
     (
@@ -1294,8 +1294,8 @@ const
       ConvFail, ConvFail, ConvFail, ConvFail, ConvFail, ConvFail,
       // tkVariant, tkArray, tkRecord, tkInterface, tkInt64, tkDynArray
       ConvFail, ConvFail, ConvFail, ConvFail, ConvFail, ConvFail,
-      // tkUString, tkClassRef, tkPointer, tkProcedure
-      ConvFail, ConvFail, ConvFail, ConvFail
+      // tkUString, tkClassRef, tkPointer, tkProcedure, tkMRecord
+      ConvFail, ConvFail, ConvFail, ConvFail {$IFDEF DELPHI_XE103_UP}, ConvFail{$ENDIF}
     ),
     // tkArray
     (
@@ -1305,8 +1305,8 @@ const
       ConvFail, ConvFail, ConvFail, ConvFail, ConvFail, ConvFail,
       // tkVariant, tkArray, tkRecord, tkInterface, tkInt64, tkDynArray
       ConvFail, ConvFail, ConvFail, ConvFail, ConvFail, ConvFail,
-      // tkUString, tkClassRef, tkPointer, tkProcedure
-      ConvFail, ConvFail, ConvFail, ConvFail
+      // tkUString, tkClassRef, tkPointer, tkProcedure, tkMRecord
+      ConvFail, ConvFail, ConvFail, ConvFail {$IFDEF DELPHI_XE103_UP}, ConvFail{$ENDIF}
     ),
     // tkRecord
     (
@@ -1316,8 +1316,8 @@ const
       ConvFail, ConvFail, ConvRec2Meth, ConvFail, ConvFail, ConvFail,
       // tkVariant, tkArray, tkRecord, tkInterface, tkInt64, tkDynArray
       ConvFail, ConvFail, ConvFail, ConvFail, ConvFail, ConvFail,
-      // tkUString, tkClassRef, tkPointer, tkProcedure
-      ConvFail, ConvFail, ConvFail, ConvFail
+      // tkUString, tkClassRef, tkPointer, tkProcedure, tkMRecord
+      ConvFail, ConvFail, ConvFail, ConvFail {$IFDEF DELPHI_XE103_UP}, ConvFail{$ENDIF}
     ),
     // tkInterface
     (
@@ -1327,8 +1327,8 @@ const
       ConvFail, ConvIntf2Class, ConvFail, ConvFail, ConvFail, ConvFail,
       // tkVariant, tkArray, tkRecord, tkInterface, tkInt64, tkDynArray
       ConvFail, ConvFail, ConvFail, ConvIntf2Intf, ConvFail, ConvFail,
-      // tkUString, tkClassRef, tkPointer, tkProcedure
-      ConvFail, ConvFail, ConvFail, ConvFail
+      // tkUString, tkClassRef, tkPointer, tkProcedure, tkMRecord
+      ConvFail, ConvFail, ConvFail, ConvFail {$IFDEF DELPHI_XE103_UP}, ConvFail{$ENDIF}
     ),
     // tkInt64
     (
@@ -1338,8 +1338,8 @@ const
       ConvFail, ConvFail, ConvFail, ConvFail, ConvFail, ConvFail,
       // tkVariant, tkArray, tkRecord, tkInterface, tkInt64, tkDynArray
       ConvFail, ConvFail, ConvFail, ConvFail, ConvOrd2Ord, ConvFail,
-      // tkUString, tkClassRef, tkPointer, tkProcedure
-      ConvOrd2Str, ConvFail, ConvFail, ConvFail
+      // tkUString, tkClassRef, tkPointer, tkProcedure, tkMRecord
+      ConvOrd2Str, ConvFail, ConvFail, ConvFail {$IFDEF DELPHI_XE103_UP}, ConvFail{$ENDIF}
     ),
     // tkDynArray
     (
@@ -1349,8 +1349,8 @@ const
       ConvFail, ConvFail, ConvFail, ConvFail, ConvFail, ConvFail,
       // tkVariant, tkArray, tkRecord, tkInterface, tkInt64, tkDynArray
       ConvFail, ConvFail, ConvFail, ConvFail, ConvFail, ConvFail,
-      // tkUString, tkClassRef, tkPointer, tkProcedure
-      ConvFail, ConvFail, ConvFail, ConvFail
+      // tkUString, tkClassRef, tkPointer, tkProcedure, tkMRecord
+      ConvFail, ConvFail, ConvFail, ConvFail {$IFDEF DELPHI_XE103_UP}, ConvFail{$ENDIF}
     ),
     // tkUString
     (
@@ -1360,8 +1360,8 @@ const
       ConvFail, ConvFail, ConvFail, ConvFail, ConvFail, ConvFail,
       // tkVariant, tkArray, tkRecord, tkInterface, tkInt64, tkDynArray
       ConvFail, ConvFail, ConvFail, ConvFail, ConvStr2Ord, {$IFDEF DELPHI_XE3_UP}ConvStr2DynArray{$ELSE}ConvFail{$ENDIF},
-      // tkUString, tkClassRef, tkPointer, tkProcedure
-      ConvFail, ConvFail, ConvFail, ConvFail
+      // tkUString, tkClassRef, tkPointer, tkProcedure, tkMRecord
+      ConvFail, ConvFail, ConvFail, ConvFail {$IFDEF DELPHI_XE103_UP}, ConvFail{$ENDIF}
     ),
     // tkClassRef
     (
@@ -1371,8 +1371,8 @@ const
       ConvFail, ConvFail, ConvFail, ConvFail, ConvFail, ConvFail,
       // tkVariant, tkArray, tkRecord, tkInterface, tkInt64, tkDynArray
       ConvFail, ConvFail, ConvFail, ConvFail, ConvFail, ConvFail,
-      // tkUString, tkClassRef, tkPointer, tkProcedure
-      ConvFail, ConvFail, ConvFail, ConvFail
+      // tkUString, tkClassRef, tkPointer, tkProcedure, tkMRecord
+      ConvFail, ConvFail, ConvFail, ConvFail {$IFDEF DELPHI_XE103_UP}, ConvFail{$ENDIF}
     ),
     // tkPointer
     (
@@ -1382,8 +1382,8 @@ const
       ConvFail, ConvFail, ConvFail, ConvFail, ConvFail, ConvFail,
       // tkVariant, tkArray, tkRecord, tkInterface, tkInt64, tkDynArray
       ConvFail, ConvFail, ConvFail, ConvFail, ConvFail, ConvFail,
-      // tkUString, tkClassRef, tkPointer, tkProcedure
-      ConvFail, ConvFail, ConvFail, ConvFail
+      // tkUString, tkClassRef, tkPointer, tkProcedure, tkMRecord
+      ConvFail, ConvFail, ConvFail, ConvFail {$IFDEF DELPHI_XE103_UP}, ConvFail{$ENDIF}
     ),
     // tkProcedure
     (
@@ -1393,9 +1393,23 @@ const
       ConvFail, ConvFail, ConvFail, ConvFail, ConvFail, ConvFail,
       // tkVariant, tkArray, tkRecord, tkInterface, tkInt64, tkDynArray
       ConvFail, ConvFail, ConvFail, ConvFail, ConvFail, ConvFail,
-      // tkUString, tkClassRef, tkPointer, tkProcedure
-      ConvFail, ConvFail, ConvFail, ConvFail
+      // tkUString, tkClassRef, tkPointer, tkProcedure, tkMRecord
+      ConvFail, ConvFail, ConvFail, ConvFail {$IFDEF DELPHI_XE103_UP}, ConvFail{$ENDIF}
     )
+	{$IFDEF DELPHI_XE103_UP}
+	,
+    // tkMRecord
+    (
+      // tkUnknown, tkInteger, tkChar, tkEnumeration, tkFloat, tkString,
+      ConvFail, ConvFail, ConvFail, ConvFail, ConvFail, ConvFail,
+      // tkSet, tkClass, tkMethod, tkWChar, tkLString, tkWString
+      ConvFail, ConvFail, ConvFail, ConvFail, ConvFail, ConvFail,
+      // tkVariant, tkArray, tkRecord, tkInterface, tkInt64, tkDynArray
+      ConvFail, ConvFail, ConvFail, ConvFail, ConvFail, ConvFail,
+      // tkUString, tkClassRef, tkPointer, tkProcedure, tkMRecord
+      ConvFail, ConvFail, ConvFail, ConvFail, ConvFail
+    )
+	{$ENDIF}
   );
 {$ENDREGION}
 
@@ -1420,7 +1434,7 @@ begin
   if i > -1 then
     Result := s.SubString(Succ(i), s.Length - (Succ(i) + 1))
   else
-    Result := string.Empty; 
+    Result := string.Empty;
   {$ENDIF}
 end;
 
@@ -2453,16 +2467,23 @@ function TRttiTypeHelper.TryGetConstructor(out AMethod: TRttiMethod): boolean;
 var
   methods : TArray<TRttiMethod>;
   method : TRttiMethod;
+  rttiType : TRttiType;
 begin
   result := False;
-  methods := GetDeclaredMethods;
-  for method in methods do
+  rttiType := Self;
+
+  while (rttiType <> nil) and (rttiType.Handle <> TypeInfo(TObject)) do
   begin
-    if method.IsConstructor and (Length(method.GetParameters) = 0) then
+    methods := rttiType.GetDeclaredMethods;
+    for method in methods do
     begin
-      AMethod := method;
-      Exit(true);
+      if method.IsConstructor and (Length(method.GetParameters) = 0) then
+      begin
+        AMethod := method;
+        Exit(true);
+      end;
     end;
+    rttiType := rttiType.BaseType;
   end;
 end;
 
@@ -3184,7 +3205,7 @@ begin
       Result := LProp;
       Break;
     end;
-  end;  
+  end;
   {$ENDIF}
 end;
 

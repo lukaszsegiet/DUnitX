@@ -1,10 +1,16 @@
-program DUnitXExamples_2010;
+program DUnitXExamples_D10Rio;
 
 {$APPTYPE CONSOLE}
 
 uses
-  SysUtils,
+  System.SysUtils,
   DUnitX.Examples.General in 'DUnitX.Examples.General.pas',
+  DUnitX.ConsoleWriter.Base in '..\DUnitX.ConsoleWriter.Base.pas',
+  DUnitX.DUnitCompatibility in '..\DUnitX.DUnitCompatibility.pas',
+  DUnitX.Generics in '..\DUnitX.Generics.pas',
+  DUnitX.InternalInterfaces in '..\DUnitX.InternalInterfaces.pas',
+  DUnitX.IoC in '..\DUnitX.IoC.pas',
+  DUnitX.Loggers.Console in '..\DUnitX.Loggers.Console.pas',
   DUnitX.Loggers.Text in '..\DUnitX.Loggers.Text.pas',
   DUnitX.Loggers.XML.NUnit in '..\DUnitX.Loggers.XML.NUnit.pas',
   DUnitX.Loggers.XML.xUnit in '..\DUnitX.Loggers.XML.xUnit.pas',
@@ -15,39 +21,25 @@ uses
   DUnitX.TestResult in '..\DUnitX.TestResult.pas',
   DUnitX.RunResults in '..\DUnitX.RunResults.pas',
   DUnitX.TestRunner in '..\DUnitX.TestRunner.pas',
+  DUnitX.Utils in '..\DUnitX.Utils.pas',
   DUnitX.Utils.XML in '..\DUnitX.Utils.XML.pas',
   DUnitX.WeakReference in '..\DUnitX.WeakReference.pas',
   DUnitX.Windows.Console in '..\DUnitX.Windows.Console.pas',
   DUnitX.StackTrace.EurekaLog7 in '..\DUnitX.StackTrace.EurekaLog7.pas',
   NonNamespacedExample in 'NonNamespacedExample.pas',
   DUnitX.Examples.EqualityAsserts in 'DUnitX.Examples.EqualityAsserts.pas',
+  DUnitX.FixtureResult in '..\DUnitX.FixtureResult.pas',
   DUnitX.Loggers.Null in '..\DUnitX.Loggers.Null.pas',
   DUnitX.MemoryLeakMonitor.Default in '..\DUnitX.MemoryLeakMonitor.Default.pas',
-  DUnitX.AutoDetect.Console in '..\DUnitX.AutoDetect.Console.pas',
-  DUnitX.ConsoleWriter.Base in '..\DUnitX.ConsoleWriter.Base.pas',
-  DUnitX.DUnitCompatibility in '..\DUnitX.DUnitCompatibility.pas',
   DUnitX.Extensibility in '..\DUnitX.Extensibility.pas',
-  DUnitX.Extensibility.PluginManager in '..\DUnitX.Extensibility.PluginManager.pas',
-  DUnitX.FixtureProviderPlugin in '..\DUnitX.FixtureProviderPlugin.pas',
-  DUnitX.FixtureResult in '..\DUnitX.FixtureResult.pas',
-  DUnitX.Generics in '..\DUnitX.Generics.pas',
-  DUnitX.InternalInterfaces in '..\DUnitX.InternalInterfaces.pas',
-  DUnitX.IoC in '..\DUnitX.IoC.pas',
-  DUnitX.Loggers.Console in '..\DUnitX.Loggers.Console.pas',
   DUnitX.CommandLine.OptionDef in '..\DUnitX.CommandLine.OptionDef.pas',
   DUnitX.CommandLine.Options in '..\DUnitX.CommandLine.Options.pas',
   DUnitX.CommandLine.Parser in '..\DUnitX.CommandLine.Parser.pas',
-  DUnitX.OptionsDefinition in '..\DUnitX.OptionsDefinition.pas',
-  DUnitX.Banner in '..\DUnitX.Banner.pas',
-  DUnitX.CategoryExpression in '..\DUnitX.CategoryExpression.pas',
-  DUnitX.TestNameParser in '..\DUnitX.TestNameParser.pas',
-  DUnitX.FilterBuilder in '..\DUnitX.FilterBuilder.pas',
-  DUnitX.Filters in '..\DUnitX.Filters.pas',
-  DUnitX.Assert in '..\DUnitX.Assert.pas',
-  DUnitX.Utils in '..\DUnitX.Utils.pas',
+  DUnitX.FixtureProviderPlugin in '..\DUnitX.FixtureProviderPlugin.pas',
+  DUnitX.Timeout in '..\DUnitX.Timeout.pas',
   DUnitX.Attributes in '..\DUnitX.Attributes.pas',
-  DUnitX.Types in '..\DUnitX.Types.pas',
-  DUnitX.Timeout in '..\DUnitX.Timeout.pas';
+  DUnitX.Linux.Console in '..\DUnitX.Linux.Console.pas',
+  ProviderExample in 'ProviderExample.pas';
 
 var
   runner : ITestRunner;
@@ -56,8 +48,6 @@ var
   nunitLogger : ITestLogger;
 begin
   try
-    TDUnitX.CheckCommandLine;
-
     //Create the runner
     runner := TDUnitX.CreateRunner;
     runner.UseRTTI := True;
@@ -75,16 +65,9 @@ begin
 
     //Run tests
     results := runner.Execute;
-    if not results.AllPassed then
-      System.ExitCode := EXIT_ERRORS;
 
-    {$IFNDEF CI}
-    if TDUnitX.Options.ExitBehavior = TDUnitXExitBehavior.Pause then
-    begin
-      System.Write('Done.. press <Enter> key to quit.');
-      System.Readln;
-    end;
-    {$ENDIF}
+    System.Write('Done.. press <Enter> key to quit.');
+    System.Readln;
   except
     on E: Exception do
       System.Writeln(E.ClassName, ': ', E.Message);

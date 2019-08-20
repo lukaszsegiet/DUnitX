@@ -125,6 +125,7 @@ type
     procedure ATest;
   end;
 
+  {$M+}
   TExampleFixture4 = class
   protected
     FObject: TObject;
@@ -143,17 +144,34 @@ type
     procedure Testing;
   end;
 
+  TExampleFixture6 = class
+  protected
+    FObject: TObject;
+  public
+    constructor Create;
+    destructor Destroy;override;
+  end;
+
+  TExampleFixture7 = class(TExampleFixture6)
+  public
+    [Test]
+    procedure Testing;
+  end;
+
+
 implementation
 
 uses
   {$IFDEF USE_NS}
   System.SysUtils,
   System.Classes,
-  WinApi.Windows,
   {$ELSE}
   SysUtils,
   Classes,
-  Windows,
+    {$IFDEF DELPHI_2010_DOWN}
+    //D2010 doesn't have TThread.Sleep
+    Windows,
+    {$ENDIF}
   {$ENDIF}
   DUnitX.DUnitCompatibility;
 
@@ -301,6 +319,26 @@ begin
   Assert.IsNotNull(FObject, 'Problem with inheritance');
 end;
 
+{ TExampleFixture6 }
+
+constructor TExampleFixture6.Create;
+begin
+  FObject := TObject.Create;
+end;
+
+destructor TExampleFixture6.Destroy;
+begin
+  FObject.Free;
+  inherited;
+end;
+
+{ TExampleFixture7 }
+
+procedure TExampleFixture7.Testing;
+begin
+  Assert.IsNotNull(FObject, 'Problem with inheritance');
+end;
+
 initialization
 //I was hoping to use RTTI to discover the TestFixture classes, however unlike .NET
 //if we don't touch the class somehow then the linker will remove
@@ -321,5 +359,6 @@ initialization
   TDUnitX.RegisterTestFixture(TExampleFixture2);
   TDUnitX.RegisterTestFixture(TExampleFixture3);
   TDUnitX.RegisterTestFixture(TExampleFixture5);
+  TDUnitX.RegisterTestFixture(TExampleFixture7);
 //{$ENDIF}
 end.
