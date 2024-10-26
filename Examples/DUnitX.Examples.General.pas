@@ -39,7 +39,7 @@ uses
 
 type
   {$M+}
-  [TestFixture('ExampleFixture1','General Example Tests')]
+  [TestFixture('Examples.Fixture1','General Example Tests')]
   TMyExampleTests = class
   public
     //Run the same test with mulitiple parameters.
@@ -71,6 +71,9 @@ type
     procedure TestError;
 
     [Test]
+    {$IFDEF DELPHI_2010}
+    [Ignore('MaxTime does not work in D2010')]
+    {$ENDIF}
     [MaxTime(2000)]
     procedure TooLong;
 
@@ -168,10 +171,10 @@ uses
   {$ELSE}
   SysUtils,
   Classes,
-    {$IFDEF DELPHI_2010_DOWN}
-    //D2010 doesn't have TThread.Sleep
-    Windows,
-    {$ENDIF}
+  {$IFDEF DELPHI_2010}
+  //D2010 doesn't have TThread.Sleep
+  Windows,
+  {$ENDIF}
   {$ENDIF}
   DUnitX.DUnitCompatibility;
 
@@ -354,11 +357,9 @@ initialization
 //manual registration for now.
 
 //Register the test fixtures
-//{$IFNDEF DELPHI_XE_UP}
   TDUnitX.RegisterTestFixture(TMyExampleTests);
   TDUnitX.RegisterTestFixture(TExampleFixture2);
   TDUnitX.RegisterTestFixture(TExampleFixture3);
   TDUnitX.RegisterTestFixture(TExampleFixture5);
   TDUnitX.RegisterTestFixture(TExampleFixture7);
-//{$ENDIF}
 end.
